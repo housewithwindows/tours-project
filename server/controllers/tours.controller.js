@@ -17,7 +17,7 @@ const getTour = catchAsync(async (req, res, next) => {
 
 const createTour = catchAsync(async (req, res, next) => {
   const { title, description, duration } = req.body;
-  const newTour = await Tour.create({ title, description, duration });
+  const newTour = await Tour.create({ title, description, duration,price });
   res.status(201).json(newTour);
 });
 
@@ -31,7 +31,7 @@ const deleteTour = catchAsync(async (req, res, next) => {
 
 const updateTour = catchAsync(async (req, res, next) => {
   const { title, description, duration } = req.body;
-  const updatedTour = await Tour.findByIdAndUpdate(req.params.id,{ title, description, duration });
+  const updatedTour = await Tour.findByIdAndUpdate(req.params.id,{ title, description, duration,price });
   if (!updatedTour) {
     return next(new AppError("Tour not found", 404));
   }

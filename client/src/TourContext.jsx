@@ -3,8 +3,7 @@
 import { useState } from "react";
 import { useContext } from "react";
 import { createContext } from "react";
-import { tour } from "../../server/router/tour.router";
-import Tour from "../../server/model/tours.model";
+
 
 export const TourContext = createContext();
 

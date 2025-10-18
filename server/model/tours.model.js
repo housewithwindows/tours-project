@@ -16,6 +16,10 @@ const tourSchema = new mongoose.Schema({
         minimumLength: [8,'description must be at least 8 letters'],
         maxLength: [20,'description must be at most 20 letters'],
         required: [true,'Entering a description is neccessary']
+    },
+    price: {
+        type : Number,
+        required: [true,'Entering a price is required']
     }
 },{timestamps: true})
 

@@ -3,7 +3,7 @@ const dotenv = require('dotenv');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
-
+const cors = require('cors')
 // Routers
 const tourRouter = require('./router/tour.router.js');
 const authRouter = require('./router/auth.router.js');
@@ -20,13 +20,18 @@ const app = express();
 if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
-
+app.use(cors({
+  origin: "http://localhost:5173",
+  credentials: true               
+}));
 app.use(cookieParser());
 app.use(express.json());
 
 
 app.use('/api/auth', authRouter);
-app.use('/api/tour', tourRouter);
+app.use('/api/tours', tourRouter);
+
+
 
 
 app.use(globalErrorHandler);

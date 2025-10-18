@@ -2,63 +2,68 @@
 /* eslint-disable react/prop-types */
 import { createContext, useContext, useState } from "react";
 
-export const AuthContext = createContext();
 
+export const AuthContext = createContext();
 export const useAuth = () => useContext(AuthContext);
 
-const API_URL = 'http://localhost:3000/api';
+const API_URL = "http://localhost:3000/api";
 
-export const AuthProivder = ({ children }) => {
-    const [user, setUser] = useState(null);
+export const AuthProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
 
-
-
-    const login = async (formObj) => {
-        try {
-            const res = await fetch(`${API_URL}/auth/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formObj),
-                credentials: 'include'
-            });
-
-            const result = await res.json();
-
-            if(!res.ok) {
-                throw new Error(result.message);
-            };
-
-            setUser(result.data.user);
-        } catch(err) {
-            alert(err.message)
-        }
+  const login = async (formObj) => {
+    try {
+      const res = await fetch(`${API_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formObj),
+        credentials: "include",
+      });
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.message);
+      setUser(result.data.user);
+      return result.data.user;
+    } catch (err) {
+      alert(err.message);
     }
+  };
 
-    const signup = async (formObj) => {
-        try {
-            const res = await fetch(`${API_URL}/auth/signup`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formObj)
-            });
+  const signup = async (formObj) => {
+    try {
+      const res = await fetch(`${API_URL}/auth/signup`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formObj),
+        credentials: "include",
+      });
 
-            console.log(res)
+      const result = await res.json();
+      console.log("Signup response from backend:", result);
 
-            const data = await res.json();
+      if (!result.data || !result.data.user) {
+        throw new Error("Unexpected response format: user not found");
+      }
 
-            alert(data.message);
-        } catch(err) {
-            console.log(err);
-        }
+      setUser(result.data.user);
+      return result.data.user;
+    } catch (err) {
+      alert(err.message);
+      return null;
     }
+  };
 
-    return (
-        <AuthContext.Provider value={{signup, login, user}}>
-            {children}
-        </AuthContext.Provider>
-    )
+  // logout function
+  const logout = () => {
+    setUser(null);
+    
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, login, signup, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
+
+
+

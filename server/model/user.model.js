@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcrypt')
+const crypt = require('bcrypt')
 const crypto = require('crypto')
 
 
@@ -12,7 +12,6 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: [true, 'Email is required'],
-        unique: [true, 'Email must be unique']
     },
     photo: String,
     role: {
@@ -39,13 +38,13 @@ const userSchema = new mongoose.Schema({
 userSchema.pre('save', async function(next){
     if(!this.isModified('password')) return next()
 
-    this.password = await bcrypt.hash(this.password,12)
+    this.password = await crypt.hash(this.password,12)
     
     next()
 })
 // ვადარებთ პაროლებს 
 userSchema.methods.comparePasswords = async (candidate,password) => {
-    return await bcrypt.compare(candidate, password);
+    return await crypt.compare(candidate, password);
 }
 
 userSchema.methods.createVerificationCode = function(){

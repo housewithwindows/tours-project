@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const catchAsync = require('../utils/catchAsync');
 const User = require('../model/user.model');
 const dotenv = require('dotenv');
@@ -7,54 +8,50 @@ const sendEmail = require('../utils/mail.js');
 
 dotenv.config();
 
-
+// Generate JWT token
 const signToken = (user) => {
-    return jwt.sign(
-        {
-            id: user._id,
-            role: user.role
-        },
-        process.env.JWT_SECRET,
-        { expiresIn: process.env.JWT_EXPIRES }
-    );
+  return jwt.sign(
+    { id: user._id, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: process.env.JWT_EXPIRES }
+  );
 };
 
+// Create and send token with full user object
 const createSendToken = (user, statusCode, res) => {
-    const token = signToken(user);
+  const token = signToken(user);
 
-    res.cookie("token", token, {
-        maxAge: Number(process.env.COOKIE_EXPIRES) * 24 * 60 * 60 * 1000,
-        secure: process.env.NODE_ENV !== "dev",
-        httpOnly: true,
-        sameSite: "Lax"
-    });
+  res.cookie("token", token, {
+    maxAge: Number(process.env.COOKIE_EXPIRES) * 24 * 60 * 60 * 1000,
+    secure: process.env.NODE_ENV !== "dev",
+    httpOnly: true,
+    sameSite: "Lax"
+  });
 
-    res.status(statusCode).json({
-        status: "success",
-        data: { user },
-    });
+  return res.status(statusCode).json({
+    status: "success",
+    message: "User created successfully",
+    data: { user } // return full user as-is
+  });
 };
 
-
+// SIGNUP CONTROLLER
 const signUp = catchAsync(async (req, res, next) => {
-    const { email, password, fullname } = req.body;
+  const { email, password, fullname } = req.body;
 
-    const hashedPassword = await bcrypt.hash(password, 12);
+  const newUser = await User.create({
+    email,
+    password,
+    fullname
+  });
 
-    const newUser = await User.create({
-        email,
-        password: hashedPassword,
-        fullname
-    });
+  const code = newUser.createVerificationCode();
+  await newUser.save({ validateBeforeSave: false });
 
-    const code = newUser.createVerificationCode();
-    await newUser.save({ validateBeforeSave: false });
+  const url = `${req.protocol}://${req.get("host")}/api/auth/verify/${code}`;
+  await sendEmail(email, 'You have successfully signed up', url);
 
-    const url = `${req.protocol}://${req.get("host")}/api/auth/verify/${code}`;
-
-    await sendEmail(email, 'You have successfully signed up', url);
-
-    createSendToken(newUser, 201, res);
+  return createSendToken(newUser, 201, res);
 });
 
 
