@@ -4,6 +4,7 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 const cookieParser = require('cookie-parser');
 const cors = require('cors')
+const path = require('path')
 // Routers
 const tourRouter = require('./router/tour.router.js');
 const authRouter = require('./router/auth.router.js');
@@ -21,9 +22,13 @@ if (process.env.NODE_ENV === 'development') {
     app.use(morgan('dev'));
 }
 app.use(cors({
-  origin: "http://localhost:5173",
-  credentials: true               
+    origin: process.env.CLIENT_URL,
+    credentials: true               
 }));
+
+
+app.use(express.static(path.join(__dirname,"dist")))
+
 app.use(cookieParser());
 app.use(express.json());
 

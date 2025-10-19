@@ -4,7 +4,7 @@ import Tours from "./Tours";
 const Profile = () => {
   const { user } = useAuth();
 
-  // If user is null or undefined, render a loading or message
+  // If user is null or undefined  render a loading  message
   if (!user) {
     return (
       <div className="flex justify-center items-center h-screen text-gray-400">

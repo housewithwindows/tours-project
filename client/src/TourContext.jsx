@@ -13,17 +13,17 @@ const API_URL = 'http://localhost:3000/api';
 
 export const TourProvider = ({ children }) => {
     const [tour, setTours] = useState([]);
-
+//getting all tours
 const getTours = async (userId) => {
         try {
             const res = await fetch(`${API_URL}/tours?userId=${userId}`, {
                 credentials: 'include'
-            });
+            });//fetching
 
             const result = await res.json();
 
             if(!res.ok) {
-                throw new Error(result.message);
+                throw new Error(result.message);//returnin error if !res.ok
             }
 
             setTours(result.data.tours);
@@ -31,7 +31,7 @@ const getTours = async (userId) => {
             console.log(err);
         }
 }
-
+//deleting a tour
 const deleteTour = async (tourId) => {
   try {
     const res = await fetch(`${API_URL}/tours/${tourId}`, {
@@ -54,7 +54,7 @@ const deleteTour = async (tourId) => {
     console.error(err);
   }
 };
-
+//updating a tour
 const updateTour = async (data,tourId) => {
     try {
     const res = await fetch(`${API_URL}/tours/${tourId}`, {
@@ -82,7 +82,7 @@ const updateTour = async (data,tourId) => {
 }
 
 
-const addPosts = async (tourObj) => {
+const addTours = async () => {
         try {
             const res = await fetch(`${API_URL}/tours`,{
                 method: "POST",
@@ -104,7 +104,7 @@ const addPosts = async (tourObj) => {
 }
 
     return (
-        <TourContext.Provider value={{getTours, addPosts,deleteTour,updateTour}}>
+        <TourContext.Provider value={{getTours, addTours,deleteTour,updateTour}}>
             {children}
         </TourContext.Provider>
     )

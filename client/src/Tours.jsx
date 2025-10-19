@@ -54,12 +54,12 @@ const Tours = () => {
       const updatedTours = tours.map((tour) =>
         tour.id === editingId ? { ...tour, title, duration, description, price } : tour
       );
-      setTours(updatedTours);
-      setEditingId(null);
+      setTours(updatedTours);//setting tours as updated ones
+      setEditingId(null);//setting editing as null if we are done editing
     } else {
       // if we update our tour everything should return updated
       const newTour = {
-        id: Date.now(),
+        id: Date.now(),//unique ID
         title,
         duration,
         description,
@@ -108,7 +108,7 @@ const Tours = () => {
     setCart([...cart, tour]);
   };
 
-  // კარტიდან ტურის წაშლა
+  // კალათიდან ტურის წაშლა
   const handleRemoveFromCart = (id) => {
     setCart(cart.filter((item) => item.id !== id));
   };
@@ -129,7 +129,7 @@ const Tours = () => {
     <div className="p-6 w-screen h-screen text-white bg-gray-900 rounded shadow text-base overflow-auto">
       <h2 className="text-2xl font-bold mb-4">My Tours</h2>
 
-      {/* თუ ტურები არ არის, ამის შესახებ გვაგზავნის შეტყობინებას */}
+      {/* თუ ტურები არ არის ამას გამოიტანს*/}
       {tours.length === 0 ? (
         <p className="mb-6 text-gray-400">No Tours Found</p>
       ) : (
@@ -144,7 +144,7 @@ const Tours = () => {
                 <strong>Description:</strong> {tour.description}
               </p>
               <p>
-                <strong>Price:</strong> {tour.price}
+                <strong>Price:</strong> {tour.price}$
               </p>
               <p>
                 <strong>Author:</strong> {user ? user.fullname : "Anonymous"}
@@ -181,7 +181,7 @@ const Tours = () => {
         <p className="mb-4 text-green-400 font-semibold">{buyMessage}</p>
       )}
 
-      {/* თუ კარტი ცარიელია, ამის შესახებ აცნობებს */}
+      {/* თუ კალათა ცარიელია მაშინ გამოიტანს*/}
       {cart.length === 0 ? (
         <p className="mb-6 text-gray-400">Your cart is empty.</p>
       ) : (
@@ -193,7 +193,7 @@ const Tours = () => {
             >
               <div>
                 <p className="font-semibold">{item.title}</p>
-                <p>Price: {item.price}</p>
+                <p>Price: {item.price}$</p>
               </div>
               <button
                 onClick={() => handleRemoveFromCart(item.id)}

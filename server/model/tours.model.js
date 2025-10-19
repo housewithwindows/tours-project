@@ -8,7 +8,7 @@ const tourSchema = new mongoose.Schema({
     required: [true,'Entering a title is neccessary']
     },
     duration: {
-        type: Number,
+        type: String,
         required: [true,'Entering duration is required']
     },
     description: {
@@ -18,7 +18,7 @@ const tourSchema = new mongoose.Schema({
         required: [true,'Entering a description is neccessary']
     },
     price: {
-        type : Number,
+        type : String,
         required: [true,'Entering a price is required']
     }
 },{timestamps: true})

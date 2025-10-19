@@ -10,7 +10,7 @@ const API_URL = "http://localhost:3000/api";
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
-
+  // adding log in
   const login = async (formObj) => {
     try {
       const res = await fetch(`${API_URL}/auth/login`, {
@@ -20,14 +20,16 @@ export const AuthProvider = ({ children }) => {
         credentials: "include",
       });
       const result = await res.json();
-      if (!res.ok) throw new Error(result.message);
+      if (!res.ok) {
+        throw new Error(result.message)
+      };
       setUser(result.data.user);
       return result.data.user;
     } catch (err) {
       alert(err.message);
     }
   };
-
+  //sign up function
   const signup = async (formObj) => {
     try {
       const res = await fetch(`${API_URL}/auth/signup`, {
@@ -57,7 +59,7 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
     
   };
-
+  
   return (
     <AuthContext.Provider value={{ user, login, signup, logout }}>
       {children}

@@ -27,7 +27,7 @@ const LogIn = () => {
             email: e.target.email.value,//sets email as inputed value
             password: e.target.password.value//sets password as inputed value
         };
-
+        
         try {
             const loggedInUser = await login(formObj);
             if (loggedInUser) {
@@ -37,6 +37,8 @@ const LogIn = () => {
         } catch (error) {
             alert("Login failed. Please check your credentials.");//alerts check credentials if incorrect
         }
+        setEmail("")
+        setPassword("")
     };
 
     return (
